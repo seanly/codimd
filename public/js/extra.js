@@ -573,6 +573,21 @@ export function finishView (view) {
     }
   })
 
+  // drawio
+  const drawio = view.find('div.drawio.raw').removeClass('raw')
+  drawio.each(async (key, value) => {
+    const $elem = $(value).parent().parent()
+    const $value = $(value)
+    const content = $value.text()
+    try {
+      const svg = Buffer.from(content, 'base64').toString()
+      $elem.html('<div class="drawio-container">' + svg + '</div>')
+    } catch (err) {
+      $elem.html(`<div class="alert alert-warning">${escapeHTML(err)}</div>`)
+      console.warn(err)
+    }
+  })
+
   // image href new window(emoji not included)
   const images = view.find('img.raw[src]').removeClass('raw')
   images.each((key, value) => {
@@ -1145,7 +1160,8 @@ const fenceCodeAlias = {
   vega: 'vega',
   geo: 'geo',
   fretboard: 'fretboard_instance',
-  markmap: 'markmap'
+  markmap: 'markmap',
+  drawio: 'drawio'
 }
 
 function highlightRender (code, lang) {

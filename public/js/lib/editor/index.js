@@ -11,6 +11,10 @@ import CodeMirrorSpellChecker, { supportLanguages, supportLanguageCodes } from '
 import { initTableEditor } from './table-editor'
 import { availableThemes } from './constants'
 
+import './markdown/fold'
+
+import { drawio } from './markdown/drawio'
+
 /* config section */
 const isMac = CodeMirror.keyMap.default === CodeMirror.keyMap.macDefault
 const defaultEditorMode = 'gfm'
@@ -217,6 +221,7 @@ export default class Editor {
     var makeTable = $('#makeTable')
     var makeLine = $('#makeLine')
     var makeComment = $('#makeComment')
+    var makeDrawio = $('#makeDrawio')
 
     var insertRow = $('#insertRow')
     var deleteRow = $('#deleteRow')
@@ -289,6 +294,23 @@ export default class Editor {
 
     makeComment.click(() => {
       utils.insertText(this.editor, '> []')
+    })
+
+    makeDrawio.click(() => {
+      /*
+      1. Clean up state data
+      2. Get editor position
+      3. Process annotations and retrieve current data
+      4. Display drawio window
+      */
+      window.sessionStorage.setItem('drawio', '')
+
+      var cm = window.editor
+      const selStartLine = cm.getCursor('from').line
+      const selEndLine = cm.getCursor('to').line + 1
+
+      drawio.processMarkers(selStartLine, selEndLine)
+      drawio.show()
     })
 
     // table tools UI

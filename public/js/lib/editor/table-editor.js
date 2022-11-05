@@ -1,6 +1,8 @@
 /* global CodeMirror, $ */
 import { TableEditor, Point, options, Alignment, FormatType } from '@susisu/mte-kernel'
 
+import { drawio } from './markdown/drawio'
+
 // port of the code from: https://github.com/susisu/mte-demo/blob/master/src/main.js
 
 // text editor interface
@@ -196,6 +198,7 @@ export function initTableEditor (editor) {
     if (!editorIntf.transaction) {
       updateActiveState()
     }
+    drawio.processMarkers(editor.firstLine(), editor.lastLine() + 1)
   })
   editorIntf.onDidFinishTransaction = () => {
     updateActiveState()
